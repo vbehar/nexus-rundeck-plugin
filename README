@@ -1,0 +1,43 @@
+Nexus RunDeck plugin
+https://github.com/vbehar/nexus-rundeck-plugin
+
+This is a Nexus plugin that provides a new REST API meant to be used by RunDeck as an "Option provider".
+See http://rundeck.org/docs/RunDeck-Guide.html#option-model-provider
+
+
+
+Use
+
+The plugin provides the following new resources :
+- NEXUS_HOST/service/local/rundeck/options/versions : a json array with the versions of the matching artifacts.
+  Parameters (all optional) :
+  - r : repository ID to search in (null for searching in all indexed repositories)
+  - g : groupId of the artifacts to match
+  - a : artifactId of the artifacts to match
+  - p : packaging of the artifacts to match ('jar', 'war', etc)
+  - c : classifier of the artifacts to match ('sources', 'javadoc', etc)
+  - l : limit - max number of results to return
+  - includeLatest : if true, will include the special "LATEST" version before all versions
+  - includeRelease : if true, will include the special "RELEASE" version before all versions
+
+
+
+How to install
+
+Unzip the nexus-rundeck-plugin-VERSION-bundle.zip into the plugin-repository directory (located in $NEXUS_HOME/runtime/apps/nexus/plugin-repository)
+You should have a nexus-rundeck-plugin-VERSION directory with a nexus-rundeck-plugin-VERSION.jar file inside it.
+Then, you just need to restart Nexus.
+
+
+
+Change Log
+
+- Version 1.0 : compatible with Nexus 1.9 and RunDeck 1.1
+
+
+
+Resources
+
+* Nexus : http://nexus.sonatype.org
+* RunDeck : http://www.rundeck.org 
+

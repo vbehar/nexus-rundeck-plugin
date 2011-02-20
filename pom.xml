@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sonatype.nexus.plugins</groupId>
+    <artifactId>nexus-plugins-parent</artifactId>
+    <version>8</version>
+  </parent>
+
+  <groupId>org.sonatype.nexus.plugins</groupId>
+  <artifactId>nexus-rundeck-plugin</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>nexus-plugin</packaging>
+
+  <name>Nexus RunDeck Plugin</name>
+  <description>Nexus plugin providing support for RunDeck options.</description>
+  <url>https://github.com/vbehar/nexus-rundeck-plugin</url>
+  <scm>
+    <connection>scm:git:git://github.com/vbehar/nexus-rundeck-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:vbehar/nexus-rundeck-plugin.git</developerConnection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>vbehar</id>
+      <name>Vincent Behar</name>
+    </developer>
+  </developers>
+
+  <properties>
+    <nexus.version>1.9</nexus.version>
+  </properties>
+
+  <dependencies>
+	<!-- Nexus API -->
+    <dependency>
+      <groupId>org.sonatype.nexus</groupId>
+      <artifactId>nexus-plugin-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.nexus</groupId>
+      <artifactId>nexus-proxy</artifactId>
+      <version>${nexus.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.nexus</groupId>
+      <artifactId>nexus-rest-api</artifactId>
+      <version>${nexus.version}</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  	<!-- Nexus Plugins -->
+    <dependency>
+      <groupId>org.sonatype.nexus.plugins</groupId>
+      <artifactId>nexus-indexer-lucene-plugin</artifactId>
+      <version>${nexus.version}</version>
+      <scope>provided</scope>
+      <type>nexus-plugin</type>
+    </dependency>
+  </dependencies>
+
+</project>
