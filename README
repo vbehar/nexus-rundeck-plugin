@@ -9,7 +9,7 @@ See http://rundeck.org/docs/RunDeck-Guide.html#option-model-provider
 Use
 
 The plugin provides the following new resources :
-- NEXUS_HOST/service/local/rundeck/options/versions : a json array with the versions of the matching artifacts.
+- NEXUS_HOST/service/local/rundeck/options/version : a json array with the version of the matching artifacts.
   Parameters (all optional) :
   - r : repository ID to search in (null for searching in all indexed repositories)
   - g : groupId of the artifacts to match
@@ -19,13 +19,20 @@ The plugin provides the following new resources :
   - l : limit - max number of results to return
   - includeLatest : if true, will include the special "LATEST" version before all versions
   - includeRelease : if true, will include the special "RELEASE" version before all versions
+- NEXUS_HOST/service/local/rundeck/options/artifactId : a json array with the artifactId of the matching artifacts.
+  Parameters (all optional) :
+  - r : repository ID to search in (null for searching in all indexed repositories)
+  - g : groupId of the artifacts to match
+  - v : version of the artifacts to match
+  - p : packaging of the artifacts to match ('jar', 'war', etc)
+  - c : classifier of the artifacts to match ('sources', 'javadoc', etc)
 
 
 
 How to install
 
-Download from https://github.com/downloads/vbehar/nexus-rundeck-plugin/nexus-rundeck-plugin-1.0-bundle.zip
-Unzip the nexus-rundeck-plugin-VERSION-bundle.zip into the plugin-repository directory (located in $NEXUS_HOME/runtime/apps/nexus/plugin-repository)
+Download from https://github.com/downloads/vbehar/nexus-rundeck-plugin/nexus-rundeck-plugin-1.1-bundle.zip
+Unzip the nexus-rundeck-plugin-VERSION-bundle.zip into the plugin-repository directory (located in $NEXUS_HOME/sonatype-work/nexus/plugin-repository)
 You should have a nexus-rundeck-plugin-VERSION directory with a nexus-rundeck-plugin-VERSION.jar file inside it.
 Then, you just need to restart Nexus.
 
@@ -33,7 +40,8 @@ Then, you just need to restart Nexus.
 
 Change Log
 
-- Version 1.0 : compatible with Nexus 1.9 and RunDeck 1.1
+- Version 1.1 : add option provider for artifactId
+- Version 1.0 : option provider for version. compatible with Nexus 1.9 and RunDeck 1.1
 
 
 

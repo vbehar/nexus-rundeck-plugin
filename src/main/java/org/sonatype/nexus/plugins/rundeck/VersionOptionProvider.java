@@ -1,7 +1,6 @@
 package org.sonatype.nexus.plugins.rundeck;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import org.apache.maven.index.SearchType;
 import org.codehaus.plexus.component.annotations.Component;
 import org.restlet.Context;
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.restlet.data.Request;
 import org.restlet.data.Response;
 import org.restlet.data.Status;
@@ -24,18 +22,16 @@ import org.restlet.resource.Variant;
 import org.sonatype.nexus.index.Searcher;
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
 import org.sonatype.nexus.proxy.maven.metadata.operations.VersionComparator;
-import org.sonatype.plexus.rest.resource.AbstractPlexusResource;
-import org.sonatype.plexus.rest.resource.PathProtectionDescriptor;
 import org.sonatype.plexus.rest.resource.PlexusResource;
 
 /**
  * Option provider for RunDeck - see http://rundeck.org/docs/RunDeck-Guide.html#option-model-provider<br>
- * Provider for versions of artifacts presents in the Nexus repository, and matching the request.
+ * Provider for version of artifacts presents in the Nexus repository, and matching the request.
  * 
  * @author Vincent Behar
  */
-@Component(role = PlexusResource.class, hint = "RundeckVersionOptionProvider")
-public class RundeckVersionOptionProvider extends AbstractPlexusResource {
+@Component(role = PlexusResource.class, hint = "VersionOptionProvider")
+public class VersionOptionProvider extends AbstractOptionProvider {
 
     @Inject
     @Named("mavenCoordinates")
@@ -43,7 +39,7 @@ public class RundeckVersionOptionProvider extends AbstractPlexusResource {
 
     @Override
     public String getResourceUri() {
-        return "/rundeck/options/versions";
+        return "/rundeck/options/version";
     }
 
     @Override
@@ -71,7 +67,7 @@ public class RundeckVersionOptionProvider extends AbstractPlexusResource {
         // retrieve unique versions and sort them from newest to oldest
         List<String> versions = new ArrayList<String>();
         for (ArtifactInfo aInfo : searchResponse.getResults()) {
-            String version = aInfo.getArtifactVersion().toString();
+            String version = aInfo.version;
             if (!versions.contains(version)) {
                 versions.add(version);
             }
@@ -99,23 +95,6 @@ public class RundeckVersionOptionProvider extends AbstractPlexusResource {
         }
 
         return versions;
-    }
-
-    @Override
-    public List<Variant> getVariants() {
-        return Arrays.asList(new Variant(MediaType.APPLICATION_JSON));
-    }
-
-    @Override
-    public PathProtectionDescriptor getResourceProtection() {
-        // should be new PathProtectionDescriptor(this.getResourceUri(), "anon");
-        // BUT https://issues.sonatype.org/browse/NEXUS-3951
-        return new PathProtectionDescriptor(getResourceUri(), "authcBasic");
-    }
-
-    @Override
-    public Object getPayloadInstance() {
-        return null;
     }
 
 }
