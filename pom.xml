@@ -10,7 +10,7 @@
 
   <groupId>org.sonatype.nexus.plugins</groupId>
   <artifactId>nexus-rundeck-plugin</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <packaging>nexus-plugin</packaging>
 
   <name>Nexus RunDeck Plugin</name>
