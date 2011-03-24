@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.maven.index.ArtifactInfo;
 import org.apache.maven.index.IteratorSearchResponse;
 import org.apache.maven.index.SearchType;
@@ -21,7 +23,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.Variant;
 import org.sonatype.nexus.index.Searcher;
 import org.sonatype.nexus.proxy.NoSuchRepositoryException;
-import org.sonatype.nexus.proxy.maven.metadata.operations.VersionComparator;
+import org.sonatype.nexus.proxy.maven.metadata.operations.ComparableVersion;
 import org.sonatype.plexus.rest.resource.PlexusResource;
 
 /**
@@ -65,22 +67,33 @@ public class VersionOptionProvider extends AbstractOptionProvider {
         }
 
         // retrieve unique versions and sort them from newest to oldest
-        List<String> versions = new ArrayList<String>();
+        List<Option> versions = new ArrayList<Option>();
         for (ArtifactInfo aInfo : searchResponse.getResults()) {
-            String version = aInfo.version;
-            if (!versions.contains(version)) {
-                versions.add(version);
+            if (!optionsContainsValue(versions, aInfo.version)) {
+                versions.add(new Option(buildOptionName(aInfo), aInfo.version));
             }
         }
-        Comparator<String> reverseVersionComparator = Collections.reverseOrder(new VersionComparator());
-        Collections.sort(versions, reverseVersionComparator);
+        Collections.sort(versions, new Comparator<Option>() {
+
+            public int compare(Option o1, Option o2) {
+                if (o1 == null || o1.getValue() == null || o2 == null || o2.getValue() == null) {
+                    throw new IllegalArgumentException();
+                }
+
+                ComparableVersion v1 = new ComparableVersion(o1.getValue());
+                ComparableVersion v2 = new ComparableVersion(o2.getValue());
+
+                // we want to sort from newest to oldest
+                return -(v1.compareTo(v2));
+            }
+        });
 
         // optionally add "special" versions
         if (Boolean.parseBoolean(form.getFirstValue("includeLatest", null))) {
-            versions.add(0, "LATEST");
+            versions.add(0, new Option("LATEST", "LATEST"));
         }
         if (Boolean.parseBoolean(form.getFirstValue("includeRelease", null))) {
-            versions.add(0, "RELEASE");
+            versions.add(0, new Option("RELEASE", "RELEASE"));
         }
 
         // optionally limit the number of versions returned
@@ -91,10 +104,40 @@ public class VersionOptionProvider extends AbstractOptionProvider {
             limit = null;
         }
         if (limit != null && limit > 0 && versions.size() > limit) {
-            versions = new ArrayList<String>(versions.subList(0, limit));
+            versions = new ArrayList<Option>(versions.subList(0, limit));
         }
 
         return versions;
+    }
+
+    /**
+     * @param options
+     * @param value
+     * @return true if the list of options contains an option with the given value
+     */
+    private boolean optionsContainsValue(List<Option> options, String value) {
+        if (options == null) {
+            return false;
+        }
+        for (Option option : options) {
+            if (StringUtils.equals(value, option.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param artifact
+     * @return String representation of the artifact version
+     */
+    private String buildOptionName(ArtifactInfo artifact) {
+        StringBuilder name = new StringBuilder();
+        name.append(artifact.version);
+        name.append(" (");
+        name.append(DateFormatUtils.ISO_DATETIME_FORMAT.format(artifact.lastModified));
+        name.append(")");
+        return name.toString();
     }
 
 }
