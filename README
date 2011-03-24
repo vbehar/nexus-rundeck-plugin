@@ -31,7 +31,7 @@ The plugin provides the following new resources :
 
 How to install
 
-Download from https://github.com/downloads/vbehar/nexus-rundeck-plugin/nexus-rundeck-plugin-1.1-bundle.zip
+Download from https://github.com/downloads/vbehar/nexus-rundeck-plugin/nexus-rundeck-plugin-1.2-bundle.zip
 Unzip the nexus-rundeck-plugin-VERSION-bundle.zip into the plugin-repository directory (located in $NEXUS_HOME/sonatype-work/nexus/plugin-repository)
 You should have a nexus-rundeck-plugin-VERSION directory with a nexus-rundeck-plugin-VERSION.jar file inside it.
 Then, you just need to restart Nexus.
@@ -40,6 +40,7 @@ Then, you just need to restart Nexus.
 
 Change Log
 
+- Version 1.2 : the option provider for version now includes the date of the version (release)
 - Version 1.1 : add option provider for artifactId
 - Version 1.0 : option provider for version. compatible with Nexus 1.9 and RunDeck 1.1
 
